@@ -1,20 +1,16 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.routes import meta_routes
 
-app = FastAPI()
-
-origins = [
-    "http://localhost:3000",  
-]
+app = FastAPI(title="API Metas KPIs")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,      
+    allow_origins=["http://localhost:5173"],  # origem do frontend
     allow_credentials=True,
-    allow_methods=["*"],         
-    allow_headers=["*"],        
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-@app.get("/hello")
-def read_root():
-    return {"message": "Olá do backend!"}
+# Registrar as rotas
+app.include_router(meta_routes.router)
