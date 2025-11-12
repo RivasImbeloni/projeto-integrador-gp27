@@ -1,108 +1,69 @@
-import React, { useState } from 'react';
-import Input from '../common/Input';
-import Button from '../common/Button';
+import React, { useState } from "react";
+import Input from "../common/Input";
+import Button from "../common/Button";
+import { Alert, Snackbar } from "@mui/material";
 
 const GoalForm = () => {
   const [formData, setFormData] = useState({
-    titulo: '',
-    descricao: '',
-    metrica_kpi: '',
-    valor_alvo: '',
-    prazo: '',
-    area_subarea: 'Marketing / Conteúdo' 
+    titulo: "",
+    kpi: "",
+    valor_alvo: "",
+    prazo: "",
   });
+
+  const [open, setOpen] = useState(false); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevData => ({
-      ...prevData,
-      [name]: value
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Dados a enviar:", formData);
-    alert('Meta enviada para aprovação! (Veja o console)');
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/metas/post_cadastrar_metas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          titulo: formData.titulo,
+          kpi: formData.kpi,
+          valor_alvo: parseFloat(formData.valor_alvo),
+          prazo: formData.prazo,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Erro ao enviar meta");
+
+      setFormData({ titulo: "", kpi: "", valor_alvo: "", prazo: "" });
+      setOpen(true); 
+    } catch (error) {
+      console.error("Erro ao cadastrar meta:", error);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      {/* O 'name' em cada Input é crucial! 
-        Tem que ser igual às chaves do estado 'formData'
-      */}
-      <Input
-        label="Título da Meta"
-        name="titulo"
-        value={formData.titulo}
-        onChange={handleChange}
-        placeholder="Ex: Aumentar leads"
-      />
-      {/* Aqui você adicionaria o <Textarea> para "Descrição"
-        <Textarea 
-          label="Descrição"
-          name="descricao"
-          value={formData.descricao}
-          onChange={handleChange}
-          placeholder="Descreva sobre a meta"
-        />
-      */}
-      
-      {/* Campos Métrica e Valor-Alvo (lado a lado) */}
-      <div style={{ display: 'flex', gap: '20px' }}>
-        <div style={{ flex: 1 }}>
-          <Input
-            label="Métrica (KPI)"
-            name="metrica_kpi"
-            value={formData.metrica_kpi}
-            onChange={handleChange}
-            placeholder="Leads / Conversão / Tráfego"
-          />
-        </div>
-        <div style={{ flex: 1 }}>
-          <Input
-            label="Valor-Alvo"
-            name="valor_alvo"
-            value={formData.valor_alvo}
-            onChange={handleChange}
-            placeholder="Ex: 25%"
-          />
-        </div>
-      </div>
-      
-      {/* Campos Prazo e Área/Subárea (lado a lado) */}
-      <div style={{ display: 'flex', gap: '20px' }}>
-        <div style={{ flex: 1 }}>
-          <Input
-            label="Prazo"
-            name="prazo"
-            type="date" // Usar tipo 'date' facilita
-            value={formData.prazo}
-            onChange={handleChange}
-            placeholder="dd/mm/aaaa"
-          />
-        </div>
-        <div style={{ flex: 1 }}>
-          {/* Aqui você adicionaria o <Select> para "Área/Subárea"
-            <Select
-              label="Área/Subárea"
-              name="area_subarea"
-              value={formData.area_subarea}
-              onChange={handleChange}
-            >
-              <option value="Marketing / Conteúdo">Marketing / Conteúdo</option>
-              <option value="Vendas">Vendas</option>
-              <option value="Produto">Produto</option>
-            </Select>
-          */}
-        </div>
-      </div>
+    <>
+      <form onSubmit={handleSubmit}>
+        <Input label="Título da Meta" name="titulo" value={formData.titulo} onChange={handleChange} />
+        <Input label="Métrica (KPI)" name="kpi" value={formData.kpi} onChange={handleChange} />
+        <Input label="Valor-Alvo" name="valor_alvo" value={formData.valor_alvo} onChange={handleChange} />
+        <Input label="Prazo" name="prazo" type="date" value={formData.prazo} onChange={handleChange} />
 
-      <div style={{ marginTop: '30px' }}>
-        <Button type="button" styleType="default">Cancelar</Button>
-        <Button type="submit" styleType="primary">Enviar para aprovação</Button>
-      </div>
-    </form>
+        <div style={{ marginTop: "20px" }}>
+          <Button type="submit" styleType="primary">Enviar</Button>
+        </div>
+      </form>
+
+      <Snackbar open={open} autoHideDuration={3000} onClose={() => setOpen(false)}>
+        <Alert severity="success" onClose={() => setOpen(false)}>
+          Meta enviada com sucesso!
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
 

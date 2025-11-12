@@ -1,10 +1,8 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MainLayout from '../components/layout/Mainlayout';
 import GoalCreatePage from '../pages/GoalCreatePage';
-
-// Componente simples para a página de "Visualizar Metas"
-const GoalListPage = () => <h1>Minhas Metas (Página em construção)</h1>;
+import GoalList from '../components/Goal/GoalList'; 
+import GoalEditPage from '../components/Goal/GoalEditPage';
 
 const AppRoutes = () => (
   <BrowserRouter>
@@ -13,7 +11,7 @@ const AppRoutes = () => (
         path="/" 
         element={
           <MainLayout>
-            <GoalListPage />
+            <GoalList />
           </MainLayout>
         } 
       />
@@ -26,10 +24,10 @@ const AppRoutes = () => (
         } 
       />
       <Route 
-        path="/editar"
+        path="/editar/:id"
         element={
           <MainLayout>
-            {/* Aqui irei adicionar a rota de edição */}
+            <GoalEditPage/>
           </MainLayout>
         }
       />

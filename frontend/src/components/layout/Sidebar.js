@@ -1,9 +1,8 @@
-import React from 'react';
 import { Link } from 'react-router-dom'; 
 
 const Sidebar = () => (
   <div style={{ width: '250px', background: '#2c3e50', color: 'white', height: '100vh', padding: '20px' }}>
-    <h2>Rafael Silva</h2> 
+    <h2>Usuário</h2> 
     <nav>
       <ul style={{ listStyle: 'none', padding: 0 }}>
         <li style={{ marginBottom: '10px' }}>
@@ -16,8 +15,6 @@ const Sidebar = () => (
             Visualizar Metas
           </Link>
         </li>
-        {/* A edição geralmente é acessada pela tela de visualização, 
-            então podemos deixar o link direto de lado por enquanto */}
       </ul>
     </nav>
   </div>
