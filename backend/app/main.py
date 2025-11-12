@@ -6,7 +6,7 @@ app = FastAPI(title="API Metas KPIs")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # origem do frontend
+    allow_origins=["http://localhost:3000"],  # origem do frontend
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
